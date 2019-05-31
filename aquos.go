@@ -108,9 +108,6 @@ func (c *Client) login() error {
 		if !strings.Contains(r.text, "Login") {
 			return errors.New("failed to login (invalid response)")
 		}
-		if c.Username == "" {
-			return errors.New("username is not specified")
-		}
 
 		// send username
 		err = c.send(c.Username)
@@ -129,9 +126,6 @@ func (c *Client) login() error {
 		}
 		if !strings.Contains(r.text, "Password") {
 			return errors.New("failed to login (invalid response)")
-		}
-		if c.Password == "" {
-			return errors.New("Password is not specified")
 		}
 
 		// send password
