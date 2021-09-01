@@ -329,3 +329,78 @@ func (c *Client) Volume() (int, error) {
 
 	return volume, nil
 }
+
+func (c *Client) Play() error {
+	_, err := c.sendCommand("RCKY", "16")
+	return err
+}
+
+func (c *Client) FastForward() error {
+	_, err := c.sendCommand("RCKY", "17")
+	return err
+}
+
+func (c *Client) Pause() error {
+	_, err := c.sendCommand("RCKY", "18")
+	return err
+}
+
+func (c *Client) SkipBack() error {
+	_, err := c.sendCommand("RCKY", "19")
+	return err
+}
+
+func (c *Client) Stop() error {
+	_, err := c.sendCommand("RCKY", "20")
+	return err
+}
+
+func (c *Client) SkipForward() error {
+	_, err := c.sendCommand("RCKY", "21")
+	return err
+}
+
+func (c *Client) MuteToggle() error {
+	_, err := c.sendCommand("MUTE", "0")
+	return err
+}
+
+func (c *Client) SmartCentral() error {
+	_, err := c.sendCommand("RCKY", "39")
+	return err
+}
+
+func (c *Client) Enter() error {
+	_, err := c.sendCommand("RCKY", "40")
+	return err
+}
+
+func (c *Client) Up() error {
+	_, err := c.sendCommand("RCKY", "41")
+	return err
+}
+
+func (c *Client) Down() error {
+	_, err := c.sendCommand("RCKY", "42")
+	return err
+}
+
+func (c *Client) Left() error {
+	_, err := c.sendCommand("RCKY", "43")
+	return err
+}
+
+func (c *Client) Right() error {
+	_, err := c.sendCommand("RCKY", "44")
+	return err
+}
+
+func (c *Client) Return() error {
+	_, err := c.sendCommand("RCKY", "45")
+	return err
+}
+
+func (c *Client) Exit() error {
+	_, err := c.sendCommand("RCKY", "45")
+	return err
+}
