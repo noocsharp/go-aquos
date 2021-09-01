@@ -365,8 +365,13 @@ func (c *Client) MuteToggle() error {
 	return err
 }
 
-func (c *Client) SmartCentral() error {
-	_, err := c.sendCommand("RCKY", "39")
+func (c *Client) VolumeUp() error {
+	_, err := c.sendCommand("RCKY", "32")
+	return err
+}
+
+func (c *Client) VolumeDown() error {
+	_, err := c.sendCommand("RCKY", "33")
 	return err
 }
 
