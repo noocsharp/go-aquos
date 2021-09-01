@@ -8,7 +8,7 @@ import (
 	"os"
 	"strconv"
 
-	aquos "github.com/kechako/go-aquos"
+	"github.com/noocsharp/go-aquos"
 )
 
 func run() (int, error) {

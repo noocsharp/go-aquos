@@ -1,3 +1,3 @@
-module github.com/kechako/go-aquos
+module github.com/noocsharp/go-aquos
 
 go 1.12
