@@ -365,12 +365,12 @@ func (c *Client) MuteToggle() error {
 	return err
 }
 
-func (c *Client) VolumeUp() error {
+func (c *Client) VolumeDown() error {
 	_, err := c.sendCommand("RCKY", "32")
 	return err
 }
 
-func (c *Client) VolumeDown() error {
+func (c *Client) VolumeUp() error {
 	_, err := c.sendCommand("RCKY", "33")
 	return err
 }
@@ -406,6 +406,11 @@ func (c *Client) Return() error {
 }
 
 func (c *Client) Exit() error {
-	_, err := c.sendCommand("RCKY", "45")
+	_, err := c.sendCommand("RCKY", "46")
+	return err
+}
+
+func (c *Client) Netflix() error {
+	_, err := c.sendCommand("RCKY", "59")
 	return err
 }
