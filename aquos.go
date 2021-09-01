@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"net"
 	"strconv"
 	"strings"
@@ -80,9 +81,12 @@ func (c *Client) readLoop() {
 				text: s.Text(),
 			}
 		} else {
+			err := s.Err()
 			c.res <- response{
-				err: s.Err(),
+				err: err,
 			}
+			log.Print(err)
+			fmt.Println("got here\n");
 			return
 		}
 	}
