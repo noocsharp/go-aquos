@@ -328,6 +328,25 @@ func (c *Client) VolumeUp() error {
 	return err
 }
 
+func (c *Client) Input() error {
+	_, err := c.sendCommand("RCKY", "36")
+	return err
+}
+
+func (c *Client) Browser() error {
+	_, err := c.sendCommand("RCKY", "37")
+	return err
+}
+func (c *Client) Menu() error {
+	_, err := c.sendCommand("RCKY", "38")
+	return err
+}
+
+func (c *Client) SmartCentral() error {
+	_, err := c.sendCommand("RCKY", "39")
+	return err
+}
+
 func (c *Client) Enter() error {
 	_, err := c.sendCommand("RCKY", "40")
 	return err
