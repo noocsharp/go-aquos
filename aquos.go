@@ -127,7 +127,10 @@ func (c *Client) sendCommand(cmd, arg string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer conn.Close()
+	c.conn = conn
+	defer c.conn.Close()
+
+	c.w = bufio.NewWriter(conn)
 
 	c.res = make(chan response)
 	go c.readLoop()
