@@ -3,7 +3,6 @@ package aquos
 
 import (
 	"bufio"
-	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -19,52 +18,17 @@ var DefaultLoginTimeout = 200 * time.Millisecond
 type Client struct {
 	Username     string
 	Password     string
+	Address     string
 	LoginTimeout time.Duration
 
 	conn net.Conn
 	w    *bufio.Writer
 	res  chan response
-
-	name              string
-	modelName         string
-	softwareVersion   string
-	ipProtocolVersion string
 }
 
 type response struct {
 	text string
 	err  error
-}
-
-// Connect connects to the address on the named network using the provided context.
-func (c *Client) Connect(ctx context.Context, address string) error {
-	dialer := &net.Dialer{
-		Timeout:   30 * time.Second,
-		KeepAlive: 30 * time.Second,
-		DualStack: true,
-	}
-
-	conn, err := dialer.DialContext(ctx, "tcp", address)
-	if err != nil {
-		return err
-	}
-	c.conn = conn
-	c.w = bufio.NewWriter(conn)
-
-	c.res = make(chan response)
-	go c.readLoop()
-
-	err = c.login()
-	if err != nil {
-		return err
-	}
-
-	err = c.getInfo()
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (c *Client) readLoop() {
@@ -153,44 +117,42 @@ func (c *Client) login() error {
 	return nil
 }
 
-func (c *Client) getInfo() error {
-	var err error
-
-	c.name, err = c.sendCommand("TVNM", "1")
-	if err != nil {
-		return err
-	}
-	c.modelName, err = c.sendCommand("MNRD", "1")
-	if err != nil {
-		return err
-	}
-	c.softwareVersion, err = c.sendCommand("SWVN", "1")
-	if err != nil {
-		return err
-	}
-	c.ipProtocolVersion, err = c.sendCommand("IPPV", "1")
-	if err != nil {
-		return err
+func (c *Client) sendCommand(cmd, arg string) (string, error) {
+	dialer := &net.Dialer{
+		Timeout:   30 * time.Second,
+		KeepAlive: 30 * time.Second,
 	}
 
-	return nil
-}
+	conn, err := dialer.Dial("tcp", c.Address)
+	if err != nil {
+		return "", err
+	}
+	defer conn.Close()
 
-func (c *Client) sendCommand(cmd, arg string) (res string, err error) {
+	c.res = make(chan response)
+	go c.readLoop()
+
+	if len(c.Username) != 0 && len(c.Password) != 0 {
+		err = c.login()
+		if err != nil {
+			return "", err
+		}
+	}
+
 	err = c.send(fmt.Sprintf("%s%-4s", cmd, arg))
 	if err != nil {
-		return
+		return "", err
 	}
-	res, err = c.readLine()
+	res, err := c.readLine()
 	if err != nil {
-		return
+		return "", err
 	}
 	if res == "ERR" {
 		err = errors.New("aquos returns a error")
-		return
+		return "", err
 	}
 
-	return
+	return res, nil
 }
 
 func (c *Client) send(str string) (err error) {
@@ -260,22 +222,6 @@ func (c *Client) Close() error {
 		return nil
 	}
 	return c.conn.Close()
-}
-
-func (c *Client) Name() string {
-	return c.name
-}
-
-func (c *Client) ModelName() string {
-	return c.modelName
-}
-
-func (c *Client) SoftwareVersion() string {
-	return c.softwareVersion
-}
-
-func (c *Client) IPProtocolVersion() string {
-	return c.ipProtocolVersion
 }
 
 func (c *Client) Power(on bool) error {
